@@ -11,13 +11,13 @@ document.getElementById('detect-location').addEventListener('click', function() 
 });
 
 function getWeatherData(location) {
-    const apiUrl = https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${API_KEY}&units=metric;
+    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${API_KEY}&units=metric`;
     console.log('Fetching weather data from:', apiUrl);
 
     fetch(apiUrl)
         .then(response => {
             if (!response.ok) {
-                throw new Error(HTTP error! status: ${response.status});
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
         })
@@ -27,24 +27,24 @@ function getWeatherData(location) {
         })
         .catch(error => {
             console.error('Error fetching weather data:', error);
-            document.getElementById('weather-result').innerHTML = <p>Could not retrieve weather data: ${error.message}</p>;
+            document.getElementById('weather-result').innerHTML = `<p>Could not retrieve weather data: ${error.message}</p>`;
         });
 }
 
 function displayWeather(data) {
     const resultDiv = document.getElementById('weather-result');
     if (data.cod !== "200") {
-        resultDiv.innerHTML = <p>${data.message}</p>;
+        resultDiv.innerHTML = `<p>${data.message}</p>`;
         return;
     }
 
-    let output = <h2>Weather Forecast for ${data.city.name}</h2>;
+    let output = `<h2>Weather Forecast for ${data.city.name}</h2>`;
     
     const today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
 
     const todayData = data.list.find(item => item.dt_txt.includes(today));
     if (todayData) {
-        const todayIcon = https://openweathermap.org/img/wn/${todayData.weather[0].icon}.png;
+        const todayIcon = `https://openweathermap.org/img/wn/${todayData.weather[0].icon}.png`;
         const todayWeather = `
             <div class="weather-today">
                 <h3>Today's Weather</h3>
@@ -62,7 +62,7 @@ function displayWeather(data) {
 
     let row = '';
     filteredData.forEach((item, index) => {
-        const weatherIcon = https://openweathermap.org/img/wn/${item.weather[0].icon}.png;
+        const weatherIcon = `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`;
 
         const container = `
             <div class="weather-item" onclick="navigateToDetails('${item.dt_txt.split(' ')[0]}')">
@@ -77,7 +77,7 @@ function displayWeather(data) {
         row += container;
     });
 
-    output += <div class="weather-row">${row}</div>;
+    output += `<div class="weather-row">${row}</div>`;
     resultDiv.innerHTML = output;
 
     window.weatherData = data.list;
@@ -95,10 +95,10 @@ function detectLocation() {
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
 
-            fetch(https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric)
+            fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error(HTTP error! status: ${response.status});
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     return response.json();
                 })
@@ -120,5 +120,5 @@ function formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
-    return ${day}-${month}-${year};
+    return `${day}-${month}-${year}`;
 }
